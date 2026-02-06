@@ -1,5 +1,6 @@
 import tomllib
 from gc_utils import script_dir_path
+
 def read():
     try:
         with open(script_dir_path + '/info.toml', 'rb') as f:

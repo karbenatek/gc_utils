@@ -1,1 +1,3 @@
 mounts.toml
+*.pyc
+__pycache__/

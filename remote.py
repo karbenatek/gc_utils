@@ -55,28 +55,32 @@ def mount_data():
     # print(f"Script path: {script_dir_path}")
     
     analysis_info = info.read()
+    if analysis_info.get('data') is None:
+        return
+
     if not analysis_info:
         print(f"❌ No analysis info here - nothing mounted.\n By here I mean {script_dir_path}")
         return
     
-    data_path = script_dir_path + '/data'
+    mount_path = script_dir_path + '/mount'
     
     mounted_paths = get_mounts().get('mounted_paths')
     print(f"Mounted paths: {mounted_paths}")
     
-    if not mounted_paths or data_path not in mounted_paths:
-        os.makedirs(data_path, exist_ok=True)
+    if not mounted_paths or mount_path not in mounted_paths:
+        os.makedirs(mount_path, exist_ok=True)
     else:
         return
     
     source_dictionary = get_source_dictionary()  
     data_source_path =  source_dictionary[analysis_info['data']['source']] + '/' + analysis_info['data']['path']
     
+    
     cmd = [
         'rclone',
         'mount',
         data_source_path, 
-        data_path, 
+        mount_path, 
         "--vfs-cache-mode", "writes",'--daemon']
     
     try:
@@ -86,7 +90,7 @@ def mount_data():
         print(f"❌ Failed to mount: {e}")
         
     ## add absolute path to file mounts.toml
-    log_mount(data_path)
+    log_mount(mount_path)
     
     
 
